@@ -1,0 +1,12 @@
+{
+    "image1": {
+        "data": "hwQQABAAAAAAAAAAAAAAAAAAAAAPAAAAAAAAAA8AAAAAUAUADwoAAFBVUgCvCgAAUF9Spar6/wBQX1KlqgoAAFBVUqqqAAAAAFVVqqoAAAAAUADwqv8PAAAAAP+qAAAAAADwD6oAAAAAAPAAoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "Wife"
+    },
+    "*": {
+        "mimeType": "image/x-mkcd-f4",
+        "dataEncoding": "base64",
+        "namespace": "myImages"
+    }
+}
