@@ -4,6 +4,16 @@
         "mimeType": "image/x-mkcd-f4",
         "displayName": "Wife"
     },
+    "image2": {
+        "data": "hwQQABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8P8AAAAAAAAfEQ8AAP8AAB8RDw8ADwDwER8PDwAPAPAREfH//w8A8BEfDw8ADwDwHxEPDwD/AAAfEQ8AAAAAAPD/DwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "hero"
+    },
+    "image3": {
+        "data": "hwQQABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABQBQAAAAAAAAD/DwDwAAAA8B//APAAAPDwIfEA8AAA//8REf////8AHyERD/AAAP8fEREP8AAA8PAR8QDwAAAAAP//APAAAABQBQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "villian"
+    },
     "*": {
         "mimeType": "image/x-mkcd-f4",
         "dataEncoding": "base64",
