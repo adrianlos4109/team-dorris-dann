@@ -45,12 +45,14 @@ if (keyPot == 1) {
 controller.moveSprite(hero, 100, 100)
 
 // When hero touches key, win game
-hero.onOverlapSprite(key, function (sprite, otherSprite) {
-    game.showLongText("You found the Key! Game Complete!", DialogLayout.Center)
-    game.gameOver(game.WinOutcome.Win)
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Player, function (sprite, otherSprite) {
+    if (otherSprite == key) {
+        game.showLongText("You found the Key! Game Complete!", DialogLayout.Center)
+        game.over(true)
+    }
 })
 
 // When hero touches pot, destroy it
-hero.onOverlapSprite(SpriteKind.Food, function (sprite, otherSprite) {
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSprite) {
     otherSprite.destroy()
 })
