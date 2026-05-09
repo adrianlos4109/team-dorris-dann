@@ -14,15 +14,15 @@ hero.setPosition(80, 80)
 // Set tilemap
 tiles.setTilemap(tilemap`FOREST`)
 
-// Create pot 1 at random spot far from hero
+// Create pot 1 at random spot
 let pot1 = sprites.create(assets.image`pot`, SpriteKind.Food)
 pot1.setPosition(randint(20, 150), randint(20, 150))
 
-// Create pot 2 at random spot far from hero
+// Create pot 2 at random spot
 let pot2 = sprites.create(assets.image`pot`, SpriteKind.Food)
 pot2.setPosition(randint(20, 150), randint(20, 150))
 
-// Create pot 3 at random spot far from hero
+// Create pot 3 at random spot
 let pot3 = sprites.create(assets.image`pot`, SpriteKind.Food)
 pot3.setPosition(randint(20, 150), randint(20, 150))
 
