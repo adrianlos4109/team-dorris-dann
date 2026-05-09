@@ -14,45 +14,50 @@ hero.setPosition(80, 80)
 // Set tilemap
 tiles.setTilemap(tilemap`FOREST`)
 
-// Create pot 1 at random spot
+// Camera follows hero
+scene.cameraFollowSprite(hero)
+
+// Set lives to 3
+info.setLife(3)
+
+// Create pot 1
 let pot1 = sprites.create(assets.image`pot`, SpriteKind.Food)
 pot1.setPosition(randint(20, 150), randint(20, 150))
 
-// Create pot 2 at random spot
+// Create pot 2
 let pot2 = sprites.create(assets.image`pot`, SpriteKind.Food)
 pot2.setPosition(randint(20, 150), randint(20, 150))
 
-// Create pot 3 at random spot
+// Create pot 3
 let pot3 = sprites.create(assets.image`pot`, SpriteKind.Food)
 pot3.setPosition(randint(20, 150), randint(20, 150))
 
-// Choose which pot has the key
+// Random pot has key
 let keyPot = randint(1, 3)
+let keySpawned = false
 
-// Create key
+// Create key (hidden)
 let key = sprites.create(assets.image`Key`, SpriteKind.Player)
+key.setPosition(-100, -100)
 
-// Place key in random pot
-if (keyPot == 1) {
-    key.setPosition(pot1.x, pot1.y)
-} else if (keyPot == 2) {
-    key.setPosition(pot2.x, pot2.y)
-} else {
-    key.setPosition(pot3.x, pot3.y)
-}
-
-// Move hero with arrow keys
+// Move hero
 controller.moveSprite(hero, 100, 100)
 
-// When hero touches key, win game
-sprites.onOverlap(SpriteKind.Player, SpriteKind.Player, function (sprite, otherSprite) {
-    if (otherSprite == key) {
-        game.showLongText("You found the Key! Game Complete!", DialogLayout.Center)
-        game.over(true)
+// Pot touched
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSprite) {
+    otherSprite.destroy()
+    
+    if (!keySpawned && ((keyPot == 1 && otherSprite == pot1) || (keyPot == 2 && otherSprite == pot2) || (keyPot == 3 && otherSprite == pot3))) {
+        key.setPosition(otherSprite.x, otherSprite.y)
+        keySpawned = true
+        game.splash("You found the Key!", "Move to the next level")
     }
 })
 
-// When hero touches pot, destroy it
-sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSprite) {
-    otherSprite.destroy()
+// Key touched - Win
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Player, function (sprite, otherSprite) {
+    if (otherSprite == key) {
+        game.showLongText("Level Complete!", DialogLayout.Center)
+        game.over(true)
+    }
 })
