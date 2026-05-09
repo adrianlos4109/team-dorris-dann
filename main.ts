@@ -46,7 +46,7 @@ controller.moveSprite(hero, 100, 100)
 // Pot touched
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSprite) {
     otherSprite.destroy()
-    
+
     if (!keySpawned && ((keyPot == 1 && otherSprite == pot1) || (keyPot == 2 && otherSprite == pot2) || (keyPot == 3 && otherSprite == pot3))) {
         key.setPosition(otherSprite.x, otherSprite.y)
         keySpawned = true
