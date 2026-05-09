@@ -26,7 +26,7 @@ let hero = sprites.create(img`
 hero.setPosition(80, 80)
 
 // Create the FOREST tilemap
-tiles.setTilemap(tiles.getTilemap(`FOREST`))
+tiles.setTilemap(tilemap`FOREST`)
 
 // Create pots at different locations
 let pots: Sprite[] = []
@@ -103,7 +103,7 @@ controller.moveSprite(hero, 100, 100)
 // Game loop to check collisions
 game.onUpdate(function () {
     for (let i = 0; i < pots.length; i++) {
-        if (sprite.overlapsWith(hero, pots[i]) && !potsCollected[i]) {
+        if (hero.overlapsWith(pots[i]) && !potsCollected[i]) {
             // Pot broken
             potsCollected[i] = true
             
@@ -123,10 +123,10 @@ game.onUpdate(function () {
     if (potsCollected[0] && potsCollected[1] && potsCollected[2]) {
         if (keyFound) {
             game.showLongText("Congratulations! You found the key!", DialogLayout.Bottom)
-            game.gameOver(WinCondition.Won)
+            game.gameOver(game.WinOutcome.Win)
         } else {
             game.showLongText("Game Over! You didn't find the key!", DialogLayout.Bottom)
-            game.gameOver(WinCondition.Lost)
+            game.gameOver(game.WinOutcome.Lose)
         }
     }
 })
