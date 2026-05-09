@@ -1,4 +1,4 @@
-// Create hero sprite
+// Create hero
 let hero = sprites.create(img`
     . . . . . f f f f . . . . . . .
     . . . . f f f f f f . . . . . .
@@ -14,66 +14,43 @@ hero.setPosition(80, 80)
 // Set tilemap
 tiles.setTilemap(tilemap`FOREST`)
 
-// Create 3 pots
-let pot1 = sprites.create(img`
-    . . . . f f f f f f . . . . . .
-    . . . f f f f f f f f . . . . .
-    . . . f f . . . . f f . . . . .
-    . . . f f . . . . f f . . . . .
-    . . . f f f f f f f f . . . . .
-    . . . . f f f f f f . . . . . .
-`, SpriteKind.Food)
-pot1.setPosition(40, 40)
+// Create pot 1 at random spot far from hero
+let pot1 = sprites.create(assets.image`pot`, SpriteKind.Food)
+pot1.setPosition(randint(20, 150), randint(20, 150))
 
-let pot2 = sprites.create(img`
-    . . . . f f f f f f . . . . . .
-    . . . f f f f f f f f . . . . .
-    . . . f f . . . . f f . . . . .
-    . . . f f . . . . f f . . . . .
-    . . . f f f f f f f f . . . . .
-    . . . . f f f f f f . . . . . .
-`, SpriteKind.Food)
-pot2.setPosition(100, 70)
+// Create pot 2 at random spot far from hero
+let pot2 = sprites.create(assets.image`pot`, SpriteKind.Food)
+pot2.setPosition(randint(20, 150), randint(20, 150))
 
-let pot3 = sprites.create(img`
-    . . . . f f f f f f . . . . . .
-    . . . f f f f f f f f . . . . .
-    . . . f f . . . . f f . . . . .
-    . . . f f . . . . f f . . . . .
-    . . . f f f f f f f f . . . . .
-    . . . . f f f f f f . . . . . .
-`, SpriteKind.Food)
-pot3.setPosition(140, 50)
+// Create pot 3 at random spot far from hero
+let pot3 = sprites.create(assets.image`pot`, SpriteKind.Food)
+pot3.setPosition(randint(20, 150), randint(20, 150))
 
-// Game variables
-let potWithKey = randint(1, 3)
-let keyFound = false
-let potsBroken = 0
+// Choose which pot has the key
+let keyPot = randint(1, 3)
+
+// Create key
+let key = sprites.create(assets.image`Key`, SpriteKind.Player)
+
+// Place key in random pot
+if (keyPot == 1) {
+    key.setPosition(pot1.x, pot1.y)
+} else if (keyPot == 2) {
+    key.setPosition(pot2.x, pot2.y)
+} else {
+    key.setPosition(pot3.x, pot3.y)
+}
 
 // Move hero with arrow keys
 controller.moveSprite(hero, 100, 100)
 
-// Check collisions with pots
-hero.onOverlapTile(SpriteKind.Food, function (sprite, location) {
-    potsBroken += 1
-    tiles.setTileAt(location, img`
-        . . . . . . . . . . . . . . . .
-    `)
-    
-    if (potsBroken == potWithKey) {
-        keyFound = true
-        game.splash("Pot " + potsBroken + " broken!", "You found the key!")
-    } else {
-        game.splash("Pot " + potsBroken + " broken!", "No key here...")
-    }
-    
-    if (potsBroken == 3) {
-        if (keyFound) {
-            game.showLongText("Congratulations! You found the key!", DialogLayout.Bottom)
-            game.gameOver(game.WinOutcome.Win)
-        } else {
-            game.showLongText("Game Over! You didn't find the key!", DialogLayout.Bottom)
-            game.gameOver(game.WinOutcome.Lose)
-        }
-    }
+// When hero touches key, win game
+hero.onOverlapSprite(key, function (sprite, otherSprite) {
+    game.showLongText("You found the Key! Game Complete!", DialogLayout.Center)
+    game.gameOver(game.WinOutcome.Win)
+})
+
+// When hero touches pot, destroy it
+hero.onOverlapSprite(SpriteKind.Food, function (sprite, otherSprite) {
+    otherSprite.destroy()
 })
