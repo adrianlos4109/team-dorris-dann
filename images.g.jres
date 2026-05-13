@@ -24,6 +24,12 @@
         "mimeType": "image/x-mkcd-f4",
         "displayName": "pot"
     },
+    "song1": {
+        "data": "00b4000408020100001c00010a006400f401640000040000000000000000000000000005000004180004000600012406000800012708000a00012a0a000c00012c",
+        "mimeType": "application/mkcd-song",
+        "displayName": "Heart",
+        "namespace": "mySongs."
+    },
     "*": {
         "mimeType": "image/x-mkcd-f4",
         "dataEncoding": "base64",
