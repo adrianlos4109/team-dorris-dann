@@ -1,63 +1,117 @@
-// Create hero
-let hero = sprites.create(img`
-    . . . . . f f f f . . . . . . .
-    . . . . f f f f f f . . . . . .
-    . . . . f f f f f f . . . . . .
-    . . . . . f f f f . . . . . . .
-    . . . . . f f f f . . . . . . .
-    . . . . f f f f f f . . . . . .
-    . . . . f f f f f f . . . . . .
-    . . . . . f f f f . . . . . . .
-`, SpriteKind.Player)
-hero.setPosition(80, 80)
 
-// Set tilemap
-tiles.setTilemap(tilemap`FOREST`)
+// =====================
+// GLOBALS
+// =====================
+let hero: Sprite = null
+let keyFound = false
+let health = 3
 
-// Camera follows hero
+// =====================
+// TILEMAP
+// =====================
+tiles.setTilemap(tilemap`F1`)
+
+// =====================
+// PLAYER (CENTER SPAWN)
+// =====================
+hero = sprites.create(assets.image`hero`, SpriteKind.Player)
+
+let allTiles = tiles.getTilesByType(assets.tile`transparency16`)
+let centerIndex = Math.floor(allTiles.length / 2)
+let heroTile = allTiles[centerIndex]
+
+tiles.placeOnTile(hero, heroTile)
+
+// camera follows hero
 scene.cameraFollowSprite(hero)
 
-// Set lives to 3
-info.setLife(3)
+controller.moveSprite(hero)
+info.setScore(health)
 
-// Create pot 1
-let pot1 = sprites.create(assets.image`pot`, SpriteKind.Food)
-pot1.setPosition(randint(20, 150), randint(20, 150))
+// =====================
+// SPAWN VASES (USING vpot)
+// =====================
+function spawnVases() {
 
-// Create pot 2
-let pot2 = sprites.create(assets.image`pot`, SpriteKind.Food)
-pot2.setPosition(randint(20, 150), randint(20, 150))
+    let locations = tiles.getTilesByType(assets.tile`transparency16`)
+    let placed = 0
+    let attempts = 0
 
-// Create pot 3
-let pot3 = sprites.create(assets.image`pot`, SpriteKind.Food)
-pot3.setPosition(randint(20, 150), randint(20, 150))
+    while (placed < 3 && attempts < 50) {
 
-// Random pot has key
-let keyPot = randint(1, 3)
-let keySpawned = false
+        let tile = locations[randint(0, locations.length - 1)]
 
-// Create key (hidden)
-let key = sprites.create(assets.image`Key`, SpriteKind.Player)
-key.setPosition(-100, -100)
+        let dx = Math.abs(tile.col - heroTile.col)
+        let dy = Math.abs(tile.row - heroTile.row)
 
-// Move hero
-controller.moveSprite(hero, 100, 100)
+        // at least 4 tiles away
+        if ((dx + dy) >= 4) {
 
-// Pot touched
-sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSprite) {
-    otherSprite.destroy()
+            // ✅ CORRECT asset name: vpot
+            let vase = sprites.create(assets.image`vpot`, SpriteKind.Food)
+            tiles.placeOnTile(vase, tile)
 
-    if (!keySpawned && ((keyPot == 1 && otherSprite == pot1) || (keyPot == 2 && otherSprite == pot2) || (keyPot == 3 && otherSprite == pot3))) {
-        key.setPosition(otherSprite.x, otherSprite.y)
-        keySpawned = true
-        game.splash("You found the Key!", "Move to the next level")
+            placed++
+        }
+
+        attempts++
     }
+}
+
+// =====================
+// BREAK VASE
+// =====================
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (player, vase) {
+
+    let roll = randint(1, 100)
+
+    if (roll <= 50) {
+        health += 1
+        game.showLongText("You gained health!", DialogLayout.Bottom)
+
+    } else if (roll <= 95) {
+        health -= 1
+        game.showLongText("You lost health!", DialogLayout.Bottom)
+
+    } else {
+        keyFound = true
+        game.showLongText("You found the key!", DialogLayout.Center)
+        spawnChest()
+    }
+
+    info.setScore(health)
+
+    if (health <= 0) {
+        game.over(false)
+    }
+
+    vase.destroy()
 })
 
-// Key touched - Win
-sprites.onOverlap(SpriteKind.Player, SpriteKind.Player, function (sprite, otherSprite) {
-    if (otherSprite == key) {
+// =====================
+// CHEST
+// =====================
+function spawnChest() {
+    let chest = sprites.create(assets.image`chest`, SpriteKind.Projectile)
+
+    let locations = tiles.getTilesByType(assets.tile`transparency16`)
+    let tile = locations[randint(0, locations.length - 1)]
+
+    tiles.placeOnTile(chest, tile)
+}
+
+// =====================
+// WIN CONDITION
+// =====================
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Projectile, function (player, chest) {
+
+    if (keyFound) {
         game.showLongText("Level Complete!", DialogLayout.Center)
         game.over(true)
     }
 })
+
+// =====================
+// START
+// =====================
+spawnVases()
